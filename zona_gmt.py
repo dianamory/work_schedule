@@ -1,5 +1,4 @@
 from datetime import datetime
-from datetime import datetime
 import pytz
 import ddbb as con
 

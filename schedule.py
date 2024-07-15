@@ -1,5 +1,4 @@
 import streamlit as st
-import pandas as pd
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
 from collections import defaultdict
@@ -7,7 +6,8 @@ import zona_gmt as zona
 
 st.set_page_config(page_title="schedule", page_icon="📅", layout="wide")
 df = zona.df_final()
-print('desde el principal',df)
+grupo=int(df.Grupo.unique()[0])
+# print('desde el principal',df)
 
 # Inicialización de variables de sesión
 if 'authenticated' not in st.session_state:
@@ -154,7 +154,7 @@ if st.session_state.authenticated:
                   ))
 
       title_format = {
-         'text': f'Semana {semana}: Franjas horarias comunes GMT',
+         'text': f'Grupo {grupo}: Franjas horarias comunes GMT',
          'font': {'size': 35, 'color': '#1f77b4'},
          'xref': 'paper',
          'x': 0.5,
