@@ -43,7 +43,7 @@ if not st.session_state.authenticated:
 if st.session_state.authenticated:
       df = df[df['Grupo'] == st.session_state.group]
 
-      semana=int(df.semana.unique()[0])
+      # semana=int(df.semana.unique()[0])
 
       def process_time_slots(time_slots):
          intervals = time_slots.split(', ')
