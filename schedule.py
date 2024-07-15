@@ -201,3 +201,5 @@ if st.session_state.authenticated:
       else:
          st.subheader('Datos de disponibilidad originales')
          st.dataframe(df[['Nombre','País','GMT']])
+
+      st.sidebar.subheader('Si es 15:00 GMT y estás en un huso horario GMT-5, la hora local es 10:00 (15:00 - 5 horas)')         
