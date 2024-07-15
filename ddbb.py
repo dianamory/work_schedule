@@ -12,10 +12,10 @@ def load_data():
 
     try:
         df = pd.read_csv(url)
-        print(df)
+        # print(df)
     except requests.exceptions.RequestException as e:
         print(f"Error fetching data from Google Sheets: {e}")
-        
+
     for col in df.columns:
       if col.startswith("Horas disponibles"):
         df[col] = df[col].apply(eliminar_franjas)

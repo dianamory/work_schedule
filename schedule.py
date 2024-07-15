@@ -7,9 +7,7 @@ import zona_gmt as zona
 st.set_page_config(page_title="schedule", page_icon="📅", layout="wide")
 df = zona.df_final()
 grupo=int(df.Grupo.unique()[0])
-# print('desde el principal',df)
 
-# Inicialización de variables de sesión
 if 'authenticated' not in st.session_state:
     st.session_state.authenticated = False
 if 'group' not in st.session_state:
@@ -18,13 +16,13 @@ if 'group' not in st.session_state:
 # Función para verificar la clave de acceso
 def check_password(password):
     if group==1:
-      return password == "uno"
+      return password == "Diana"
     if group==2:
-      return password == "dos"
+      return password == "Leo"
     if group==3:
-      return password == "tres"
+      return password == "Cleses"
     if group==4:
-      return password == "cuatro"
+      return password == "Zerberus"
     
 
 # Solicitar grupo y clave de acceso si aún no está autenticado
@@ -45,7 +43,6 @@ if not st.session_state.authenticated:
 if st.session_state.authenticated:
       df = df[df['Grupo'] == st.session_state.group]
 
-      # print(df)
       semana=int(df.semana.unique()[0])
 
       def process_time_slots(time_slots):
@@ -57,7 +54,6 @@ if st.session_state.authenticated:
             result.append((start, end))
          return result
 
-      # Find common time slots
       def find_common_time_slots(df, min_members=2):
          common_slots = defaultdict(list)
          for day in ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']:
@@ -77,18 +73,22 @@ if st.session_state.authenticated:
                      start_time = time[0]
                      current_count = 1
                      current_members = [member]
+                     # print('HORA FIN: if start_time is None:,', time[0])
                   else:
                      if time[0] <= start_time + timedelta(hours=1):
                         current_count += 1
                         current_members.append(member)
+                        # print('HORA FIN: if start_time isNOT None:,', time[0])
                      else:
                         if current_count >= min_members:
                               common_slots[day].append({
                                  'start': start_time,
+                                 # 'end': time[0]+ timedelta(hours=1),
                                  'end': time[0],
                                  'count': current_count,
                                  'members': current_members
                               })
+                        # print('HORA FIN: if current_count >= min_members:,', time[0])
                         start_time = time[0]
                         current_count = 1
                         current_members = [member]
@@ -97,6 +97,7 @@ if st.session_state.authenticated:
                      common_slots[day].append({
                         'start': start_time,
                         'end': time[1],
+                        # 'end': time[1] + timedelta(hours=1),
                         'count': current_count,
                         'members': current_members
                      })
@@ -168,7 +169,7 @@ if st.session_state.authenticated:
          xaxis_title='',
          yaxis_title='',
          barmode='stack',
-         height=800,
+         height=750,
          yaxis=dict(
             tickmode='array',
             tickvals=list(range(25)),
@@ -182,7 +183,6 @@ if st.session_state.authenticated:
 
       if selected_members:
          filtered_df = df[df['Nombre'].isin(selected_members)]
-         # filtered_df['GMT']=filtered_df['GMT'].astype(int)
          st.sidebar.markdown("<h3 style='text-align: center;'>Miembros</h3>", unsafe_allow_html=True)
 
          st.sidebar.table(filtered_df[['Nombre','País','GMT']].style
