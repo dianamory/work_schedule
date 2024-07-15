@@ -7,6 +7,7 @@ import zona_gmt as zona
 st.set_page_config(page_title="schedule", page_icon="📅", layout="wide")
 df = zona.df_final()
 grupo=int(df.Grupo.unique()[0])
+print('grupo', df.Grupo.unique())
 
 if 'authenticated' not in st.session_state:
     st.session_state.authenticated = False
@@ -42,6 +43,8 @@ if not st.session_state.authenticated:
 # Si está autenticado, mostrar la aplicación principal
 if st.session_state.authenticated:
       df = df[df['Grupo'] == st.session_state.group]
+      grupo=int(df.Grupo.unique()[0])
+      print('grupo', df.Grupo.unique())
 
       # semana=int(df.semana.unique()[0])
 
