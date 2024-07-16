@@ -2,12 +2,12 @@ import streamlit as st
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
 from collections import defaultdict
-import zona_gmt as zona
+# import zona_gmt as zona
+import data as data
 
 st.set_page_config(page_title="schedule", page_icon="📅", layout="wide")
-df = zona.df_final()
-# grupo=int(df.Grupo.unique()[0])
-# print('grupo', df.Grupo.unique())
+# df = zona.df_final()
+df=data.data_final()
 
 if 'authenticated' not in st.session_state:
     st.session_state.authenticated = False
@@ -44,7 +44,8 @@ if not st.session_state.authenticated:
 if st.session_state.authenticated:
       df = df[df['Grupo'] == st.session_state.group]
       grupo=int(df.Grupo.unique()[0])
-      print('grupo', df.Grupo.unique())
+      print('Lunes:', df['Lunes'])
+      # print('grupo', df.Grupo.unique())
 
       # semana=int(df.semana.unique()[0])
 
@@ -175,14 +176,15 @@ if st.session_state.authenticated:
          height=750,
          yaxis=dict(
             tickmode='array',
-            tickvals=list(range(25)),
-            ticktext=[f"{h:02d}:00 hs" for h in range(25)]
+            tickvals=list(range(24)),
+            ticktext=[f"{h:02d}:00 hs" for h in range(24)]
          ),
          hovermode='closest',
          showlegend=False 
       )
 
       st.plotly_chart(fig, use_container_width=True)
+      st.dataframe(df[['Nombre', 'País', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']])
 
       if selected_members:
          filtered_df = df[df['Nombre'].isin(selected_members)]

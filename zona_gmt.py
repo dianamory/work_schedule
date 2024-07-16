@@ -1,6 +1,7 @@
 from datetime import datetime
 import pytz
 import ddbb as con
+from pytz import timezone, utc
 
 paises = [
     'Argentina', 'Bolivia', 'Brasil', 'Canadá', 'Chile', 'Colombia', 'Costa Rica', 
@@ -47,11 +48,12 @@ def obtener_gmt(paises_zonas_horarias):
     return gmt_dict
 
 def df_gmt():
-      df = con.load_data()
-      gmt_paises = obtener_gmt(paises_zonas_horarias)
-      df['Zona Horaria'] = df['País'].map(paises_zonas_horarias)
-      df['GMT'] = df['País'].map(gmt_paises)
-      return df
+        df = con.load_data()
+        gmt_paises = obtener_gmt(paises_zonas_horarias)
+        df['Zona Horaria'] = df['País'].map(paises_zonas_horarias)
+        df['GMT'] = df['País'].map(gmt_paises)
+        print('df_gmt: ',df[['Lunes','Martes','Miércoles']])
+        return df
 
 def convertir_a_gmt(horas, zona_horaria):
     tz = pytz.timezone(zona_horaria)
@@ -63,10 +65,24 @@ def convertir_a_gmt(horas, zona_horaria):
         horas_gmt.append(gmt_dt.strftime('%H:%M'))
     return ', '.join(horas_gmt)
 
+# def convertir_a_gmt(hours, local_timezone):
+#     gmt_hours = []
+#     for hour in hours:
+#         if hour == '24':
+#             hour = '0'  # Convertir 24 a 0 para medianoche
+#         local_time = datetime.strptime(f'2024-01-01 {hour}:00', '%Y-%m-%d %H:%M')
+#         local_time = timezone(local_timezone).localize(local_time)
+#         gmt_time = local_time.astimezone(utc)
+#         gmt_hour = gmt_time.hour
+#         gmt_hours.append(gmt_hour)
+#     return ', '.join(map(str, sorted(set(gmt_hours))))
+
 def df_final():
         dias_semana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
         df=df_gmt()
         for dia in dias_semana:
             df[f'{dia}'] = df.apply(lambda row: convertir_a_gmt(row[dia].split(', '), row['Zona Horaria']), axis=1)
         # df_zona_gmt=df[[f'{dia}' for dia in dias_semana]]
+        print('df_final: ',df[['Lunes','Martes','Miércoles']])
         return df
+df_final()
