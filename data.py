@@ -139,6 +139,22 @@ def df_final():
   return df
 
 # Función para ordenar los valores de las columnas
+# def data_final():
+#     df=df_final()
+#     def ordenar_horas(column):
+#         def convertir_y_ordenar(horas):
+#             horas_lista = horas.split(', ')
+#             horas_lista = sorted(horas_lista, key=lambda x: datetime.strptime(x, '%H:%M'))
+#             return ', '.join(horas_lista)
+        
+#         df[column] = df[column].apply(convertir_y_ordenar)
+
+#     for dia in dias_semana:
+#         ordenar_horas(dia)  
+#     return df
+
+
+# Función para ordenar los valores de las columnas y agregar valor 24:00 si existe 0 y 23:
 def data_final():
     df=df_final()
     def ordenar_horas(column):
@@ -151,5 +167,16 @@ def data_final():
 
     for dia in dias_semana:
         ordenar_horas(dia)  
+    def ordenar_y_agregar_horas(column):
+        def convertir_ordenar_agregar(horas):
+            horas_lista = horas.split(', ')
+            horas_lista = sorted(horas_lista, key=lambda x: datetime.strptime(x, '%H:%M'))
+            if horas_lista[0] == '00:00' and horas_lista[-1] == '23:00':
+                horas_lista.append('24:00')
+            return ', '.join(horas_lista)
+        
+        df[column] = df[column].apply(convertir_ordenar_agregar)
+
+    for dia in dias_semana:
+        ordenar_y_agregar_horas(dia)
     return df
-# print(df_final()[['Nombre', 'País', 'Lunes', 'Martes', 'Miércoles']])
